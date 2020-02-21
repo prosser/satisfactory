@@ -18,7 +18,7 @@ namespace SatisfactoryTools
         {
             services.AddSingleton<IObjectLookupService, ObjectLookupService>();
             services.AddSingleton<IPartStore, PartStore>();
-            services.AddScoped<IProductionLineFactory, ProductionLineFactory>();
+            //services.AddScoped<IProductionLineFactory, ProductionLineFactory>();
             services.AddScoped<IRecipeStore, RecipeStore>();
 
             services.AddSingleton<ApplicationState>();

@@ -25,8 +25,8 @@
                 Capacity = this.Capacity,
                 Rate = this.Rate,
                 Part = this.Part,
-                Consumer = filters.HasFlag(CloneFilters.Backward) ? Node.Clone(this.Consumer, filters) : this.Consumer,
-                Producer = filters.HasFlag(CloneFilters.Forward) ? Node.Clone(this.Producer, filters) : this.Producer
+                Consumer = filters.HasFlag(CloneFilters.Backward) ? this.Consumer.Clone(filters) : this.Consumer,
+                Producer = filters.HasFlag(CloneFilters.Forward) ? this.Producer.Clone(filters) : this.Producer
             };
             return clone;
         }

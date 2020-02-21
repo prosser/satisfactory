@@ -17,7 +17,7 @@
         {
             Node clone = new Node
             {
-                Transformer = this.Transformer.Clone()
+                Transformer = this.Transformer.Clone(filters)
             };
 
             if (filters.HasFlag(CloneFilters.Backward))

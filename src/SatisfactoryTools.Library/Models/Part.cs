@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
+    [DebuggerDisplay("{Id} {Name} {PartClass}{Units}")]
     public class Part : IIdentifiable
     {
-        internal const string M3Units = "m\u00b3";
+        internal const string M3Units = " m\u00b3";
 
         public static Part None { get; } = new Part { Id = 0, Name = "None" };
 

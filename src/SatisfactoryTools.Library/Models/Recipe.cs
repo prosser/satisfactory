@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     using SatisfactoryTools.Models.Dto;
     using SatisfactoryTools.Services;
 
+    [DebuggerDisplay("{Id} {Name} - {Building}")]
     public class Recipe : NodeTransformer
     {
         public Recipe()
@@ -18,7 +20,7 @@
             this.Id = id;
             this.Name = dto.Name;
             this.Time = TimeSpan.FromSeconds(dto.Time);
-            this.Inputs = dto.Inputs.Select(x => PartIo.Hydrate(x, partStore)).ToArray();
+            this.Inputs = dto.Inputs.Where(x => x.Id != id).Select(x => PartIo.Hydrate(x, partStore)).ToArray();
             this.Outputs = dto.Outputs.Select(x => PartIo.Hydrate(x, partStore)).ToArray();
             this.Builders = dto.Buildings.Select(x => x.Trim().ParseFromDescription<Builder>()).ToHashSet();
             this.IsUnlockable = true;
