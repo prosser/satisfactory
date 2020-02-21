@@ -1,0 +1,72 @@
+﻿@page "/"
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using Blazored.LocalStorage
+@inject ISyncLocalStorageService LocalStorage
+@inject IPartStore Parts
+@inject IRecipeStore Recipes
+@inject IObjectLookupService Store
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject ApplicationState ApplicationState
+
+<h1>Satisfactory Solver</h1>
+
+
+<div class="container">
+  <div class="userInput">
+    <div>
+      <label for="parts">Part</label>
+    </div>
+    <div id="parts">
+    </div>
+    <div>
+      <label for="rate">Rate</label>
+    </div>
+    <div>
+      <input type="text" id="rate" oninput="solve()" value="5"/>
+    </div>
+  </div>
+  <div id="results"></div>
+
+  <br/>
+  <h3>Alternate Recipes</h3>
+  <div id="alternates"></div>
+</div>
+
+@code {
+
+    protected override async Task OnInitializedAsync() {
+        if (Recipes.Count == 0) {
+            var loader = new WasmDataLoader(Http, NavigationManager.BaseUri, Parts, Recipes);
+            await loader.LoadDataAsync().ConfigureAwait(false);
+        }
+    //  if (selectedRecipeId != 0) {
+    //      this.selectedRecipe = Store.Lookup<Recipe>(selectedRecipeId);
+    //  }
+
+    //  this.unlocked = Recipes.GetUnlockedRecipes();
+
+    //parts = { };
+    //alternates = [];
+    //unlocked = readLocalStorage("unlocked") || [];
+    //data = null;
+
+    //const url = ;
+    //var xmlhttp = new XMLHttpRequest();
+
+    //xmlhttp.onreadystatechange = function() {
+    //  if (this.readyState == 4 && this.status == 200)
+    //  {
+    //    data = JSON.parse(this.responseText);
+    //    onDataLoaded();
+    //  }
+    //};
+    //xmlhttp.open("GET", url, true);
+    //xmlhttp.send();
+    }
+
+
+
+}
