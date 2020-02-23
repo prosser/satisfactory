@@ -6,51 +6,52 @@
 
     public class Merger : NodeTransformer
     {
-        private IReadOnlyList<PartIo> inputs;
+        private readonly PartIo[] inputs;
 
         public Merger()
         {
-            base.Outputs = new[] { new PartIo { Part = Part.None, Count = 0, Rate = 0 } };
+            this.inputs = new PartIo[3];
+            this.Output = new PartIo {Part = Part.None, Count = 0, Rate = 0};
+            this.SetOutputs(new[] {this.Output});
+            this.SetInputs(this.inputs);
         }
 
-        public override IReadOnlyList<PartIo> Inputs
-        {
-            get => base.Inputs;
-            set
-            {
-                if (value.Count > 3)
-                {
-                    throw new NotSupportedException("Cannot assign more than 3 inputs to a Merger");
-                }
-
-                if (value.Select(x => x.Part).Distinct().Count() > 1)
-                {
-                    throw new NotImplementedException("Cannot model different parts into a Merger yet");
-                }
-
-                this.inputs = value;
-
-                this.Output.Part = this.inputs[0].Part;
-                this.Output.Rate = this.inputs.Sum(x => x.Rate);
-            }
-        }
-
-        public PartIo Output => base.Outputs[0];
-
-        public override IReadOnlyList<PartIo> Outputs
-        {
-            get => base.Outputs;
-            set => throw new NotSupportedException($"Adjust outputs through {nameof(this.Inputs)}");
-        }
+        public PartIo Output { get; }
 
         internal override NodeTransformer Clone(CloneFilters filters)
         {
-            var clone = new Merger
+            var clone = new Merger();
+
+            for (int i = 0; i < 3; i++)
             {
-                Inputs = filters.HasFlag(CloneFilters.Backward) ? this.inputs.Select(x => x.Clone()).ToArray() : Array.Empty<PartIo>(),
-            };
+                PartIo input = this.inputs[i]?.Clone();
+
+                if (input != null)
+                {
+                    this.ConnectInput(input, i);
+                }
+            }
 
             return clone;
+        }
+
+        public void ConnectInput(PartIo io, int inputNumber)
+        {
+            if (inputNumber < 0 || inputNumber > 2)
+            {
+                throw new ArgumentOutOfRangeException(nameof(inputNumber), "Input number must be between 0 and 2");
+            }
+
+            this.inputs[inputNumber] = null;
+
+            if (this.inputs.Where(x => x != null).Any(x => x.Part != io.Part))
+            {
+                throw new NotImplementedException("Cannot model different parts into a Merger yet");
+            }
+
+            this.inputs[inputNumber] = io;
+            this.Output.Part = io.Part;
+            this.Output.Rate = this.inputs.Sum(x => x.Rate);
         }
     }
 }

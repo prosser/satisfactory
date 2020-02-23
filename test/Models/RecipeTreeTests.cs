@@ -1,63 +1,60 @@
-﻿using SatisfactoryTools.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-
-namespace SatisfactoryTools.Test.Models
+﻿namespace SatisfactoryTools.Test.Models
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using SatisfactoryTools.Models;
+    using SatisfactoryTools.Services;
+    using Xunit;
     using Xunit.Abstractions;
 
     public class RecipeTreeTests
     {
-        private readonly ITestOutputHelper output;
-
-        private readonly DataTests dataTests;
-
         public RecipeTreeTests(ITestOutputHelper output)
         {
             this.output = output;
             this.dataTests = new DataTests();
         }
-        [Fact]
-        public async Task<RecipeTree> CanCreateEntireRecipeTree()
-        {
-            (IPartStore _, IRecipeStore recipes) = await this.dataTests.RecipeStoreLoads().ConfigureAwait(false);
 
+        private readonly ITestOutputHelper output;
 
-            return RecipeTree.Build(recipes);
-        }
+        private readonly DataTests dataTests;
 
         [Fact]
-        public async Task AllRecipesInTree()
+        public async Task AllPartsConsumed()
         {
-            (IPartStore _, IRecipeStore recipes) = await this.dataTests.RecipeStoreLoads().ConfigureAwait(false);
-            RecipeTree tree = RecipeTree.Build(recipes);
+            (IPartStore parts, IRecipeStore recipes) = await this.dataTests.RecipeStoreLoads().ConfigureAwait(false);
+            var tree = RecipeTree.Build(recipes.AllRecipes);
 
-            foreach (Recipe recipe in recipes)
+            IEnumerable<Part> usedParts = parts.Where(part => recipes.Any(r => r.Inputs.Any(o => o.Part == part)));
+
+            int errors = 0;
+
+            foreach (Part part in usedParts)
             {
-                RecipeNode[] nodes = tree.FindRecipe(recipe).ToArray();
+                RecipeNode[] consumers = tree.FindRecipesThatConsume(part).ToArray();
 
-                if (nodes.Length == 0)
+                if (consumers.Length == 0)
                 {
-                    throw new InvalidOperationException($"Recipe {recipe.Name} is not in the tree");
+                    this.output.WriteLine($"Part {part.Name} has no consumers");
+                    ++errors;
                 }
-                Assert.NotEmpty(tree.FindRecipe(recipe));
             }
+
+            Assert.Equal(0, errors);
         }
 
         [Fact]
         public async Task AllPartsProduced()
         {
             (IPartStore parts, IRecipeStore recipes) = await this.dataTests.RecipeStoreLoads().ConfigureAwait(false);
-            RecipeTree tree = RecipeTree.Build(recipes);
+            var tree = RecipeTree.Build(recipes.AllRecipes);
 
             IEnumerable<Part> usedParts = parts.Where(part => recipes.Any(r => r.Outputs.Any(o => o.Part == part)));
 
             int errors = 0;
+
             foreach (Part part in usedParts)
             {
                 RecipeNode[] producers = tree.FindRecipesThatProduce(part).ToArray();
@@ -72,27 +69,38 @@ namespace SatisfactoryTools.Test.Models
             Assert.Equal(0, errors);
         }
 
+
         [Fact]
-        public async Task AllPartsConsumed()
+        public async Task AllRecipesInTree()
         {
-            (IPartStore parts, IRecipeStore recipes) = await this.dataTests.RecipeStoreLoads().ConfigureAwait(false);
-            RecipeTree tree = RecipeTree.Build(recipes);
+            (IPartStore _, IRecipeStore recipes) = await this.dataTests.RecipeStoreLoads().ConfigureAwait(false);
+            var tree = RecipeTree.Build(recipes.AllRecipes);
 
-            IEnumerable<Part> usedParts = parts.Where(part => recipes.Any(r => r.Inputs.Any(o => o.Part == part)));
-
-            int errors = 0;
-            foreach (Part part in usedParts)
+            foreach (Recipe recipe in recipes)
             {
-                RecipeNode[] consumers = tree.FindRecipesThatConsume(part).ToArray();
+                RecipeNode[] nodes = tree.FindRecipe(recipe).ToArray();
 
-                if (consumers.Length == 0)
+                if (nodes.Length == 0)
                 {
-                    this.output.WriteLine($"Part {part.Name} has no consumers");
-                    ++errors;
+                    throw new InvalidOperationException($"Recipe {recipe.Name} is not in the tree");
                 }
-            }
 
-            Assert.Equal(0, errors);
+                Assert.NotEmpty(tree.FindRecipe(recipe));
+            }
+        }
+
+        [Fact]
+        public async Task<RecipeTree> CanCreateEntireRecipeTree()
+        {
+            (IPartStore _, IRecipeStore recipes) = await this.dataTests.RecipeStoreLoads().ConfigureAwait(false);
+            return RecipeTree.Build(recipes.AllRecipes);
+        }
+
+        [Fact]
+        public async Task<RecipeTree> CanCreateStandardRecipeTree()
+        {
+            (IPartStore _, IRecipeStore recipes) = await this.dataTests.RecipeStoreLoads().ConfigureAwait(false);
+            return RecipeTree.Build(recipes);
         }
     }
 }

@@ -4,11 +4,11 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using Dto;
+    using Extensions;
+    using Services;
 
-    using SatisfactoryTools.Models.Dto;
-    using SatisfactoryTools.Services;
-
-    [DebuggerDisplay("{Id} {Name} - {Building}")]
+    [DebuggerDisplay("{Id} {Description}")]
     public class Recipe : NodeTransformer
     {
         public Recipe()
@@ -20,12 +20,12 @@
             this.Id = id;
             this.Name = dto.Name;
             this.Time = TimeSpan.FromSeconds(dto.Time);
-            this.Inputs = dto.Inputs.Where(x => x.Id != id).Select(x => PartIo.Hydrate(x, partStore)).ToArray();
-            this.Outputs = dto.Outputs.Select(x => PartIo.Hydrate(x, partStore)).ToArray();
+            this.SetInputs(dto.Inputs.Where(x => x.Id != id).Select(x => PartIo.Hydrate(x, partStore)).ToArray());
+            this.SetOutputs(dto.Outputs.Select(x => PartIo.Hydrate(x, partStore)).ToArray());
             this.Builders = dto.Buildings.Select(x => x.Trim().ParseFromDescription<Builder>()).ToHashSet();
             this.IsUnlockable = true;
 
-            foreach (var builder in this.Builders)
+            foreach (Builder builder in this.Builders)
             {
                 if (StaticCollections.Buildings.Contains(builder))
                 {
@@ -38,9 +38,10 @@
             this.IsUnlockable = this.Outputs.All(x => x.Part.Name != this.Name);
         }
 
-        public static Recipe None { get; } = new Recipe { Name = "None" };
-
         public ISet<Builder> Builders { get; } = new HashSet<Builder>();
+
+        public string Description =>
+            $"{this.Name}: {this.Inputs.Description()} = {this.Outputs.Description()}";
 
         public bool HandBuilt => this.Building == null;
 
@@ -51,7 +52,7 @@
             Builder.Miner => true,
             Builder.OilPump => true,
             Builder.WaterExtractor => true,
-            _ => false
+            var _ => false
         };
 
         public bool IsUnlockable { get; set; }
@@ -59,6 +60,8 @@
         public bool IsValid => this.Outputs.Count > 0;
 
         public string Name { get; set; }
+
+        public static Recipe None { get; } = new Recipe {Name = "None"};
 
         public bool RequiresBuilding => this.Builders.All(x => x.IsBuilding());
 

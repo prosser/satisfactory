@@ -8,10 +8,20 @@
     {
         public Builder? Building { get; set; }
 
-        public virtual IReadOnlyList<PartIo> Inputs { get; set; } = Array.Empty<PartIo>();
+        public IReadOnlyList<PartIo> Inputs { get; private set; } = Array.Empty<PartIo>();
 
-        public virtual IReadOnlyList<PartIo> Outputs { get; set; } = Array.Empty<PartIo>();
+        public IReadOnlyList<PartIo> Outputs { get; private set; } = Array.Empty<PartIo>();
 
         internal abstract NodeTransformer Clone(CloneFilters filters);
+
+        protected void SetInputs(IReadOnlyList<PartIo> inputs)
+        {
+            this.Inputs = inputs;
+        }
+
+        protected void SetOutputs(IReadOnlyList<PartIo> outputs)
+        {
+            this.Outputs = outputs;
+        }
     }
 }

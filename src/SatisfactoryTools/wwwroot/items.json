@@ -246,22 +246,130 @@
   "fluids": [9, 33, 34, 54, 57, 66, 112, 120, 163],
   "recipes": [
     {
-      "name": "Gathered",
+      "name": "HUB Parts",
       "time": 0,
       "rate": 1,
       "outputs": [
-        { "id": 11, "count":  1, "rate": 0 },
-        { "id": 26, "count":  1, "rate": 0 },
-        { "id": 27, "count":  1, "rate": 0 },
-        { "id": 102, "count":  1, "rate": 0 },
-        { "id": 174, "count":  1, "rate": 0 },
-        { "id": 177, "count":  1, "rate": 0 },
-        { "id": 185, "count":  1, "rate": 0 },
-        { "id": 187, "count":  1, "rate": 0 },
-        { "id": 188, "count":  1, "rate": 0 },
-        { "id": 189, "count":  1, "rate": 0 },
-        { "id": 191, "count":  1, "rate": 0 },
-        { "id": 192, "count":  1, "rate": 0 },
+        { "id": 11, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Leaves",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 26, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Wood",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 27, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Mycelia",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 102, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Alien Carapace",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 174, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Alien Organs",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 177, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Flower Petals",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 185, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Bacon Agaric",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 187, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Paleberry",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 188, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Beryl Nut",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 189, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Green Power Slug",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 191, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Yellow Power Slug",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 192, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
+      "name": "Purple Power Slug",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
         { "id": 193, "count":  1, "rate": 0 }
       ],
       "inputs": [],
