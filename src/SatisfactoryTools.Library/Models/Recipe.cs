@@ -24,10 +24,18 @@
             this.Outputs = dto.Outputs.Select(x => PartIo.Hydrate(x, partStore)).ToArray();
             this.Builders = dto.Buildings.Select(x => x.Trim().ParseFromDescription<Builder>()).ToHashSet();
             this.IsUnlockable = true;
-            this.Building = this.Builders.SingleOrDefault(x => StaticCollections.Buildings.Contains(x));
+
+            foreach (var builder in this.Builders)
+            {
+                if (StaticCollections.Buildings.Contains(builder))
+                {
+                    this.Building = builder;
+                    break;
+                }
+            }
 
             // HACK mined items have as their inputs the name of the output!
-            this.IsUnlockable = this.Outputs.Any(x => x.Part.Name == this.Name);
+            this.IsUnlockable = this.Outputs.All(x => x.Part.Name != this.Name);
         }
 
         public static Recipe None { get; } = new Recipe { Name = "None" };

@@ -246,6 +246,28 @@
   "fluids": [9, 33, 34, 54, 57, 66, 112, 120, 163],
   "recipes": [
     {
+      "name": "Gathered",
+      "time": 0,
+      "rate": 1,
+      "outputs": [
+        { "id": 11, "count":  1, "rate": 0 },
+        { "id": 26, "count":  1, "rate": 0 },
+        { "id": 27, "count":  1, "rate": 0 },
+        { "id": 102, "count":  1, "rate": 0 },
+        { "id": 174, "count":  1, "rate": 0 },
+        { "id": 177, "count":  1, "rate": 0 },
+        { "id": 185, "count":  1, "rate": 0 },
+        { "id": 187, "count":  1, "rate": 0 },
+        { "id": 188, "count":  1, "rate": 0 },
+        { "id": 189, "count":  1, "rate": 0 },
+        { "id": 191, "count":  1, "rate": 0 },
+        { "id": 192, "count":  1, "rate": 0 },
+        { "id": 193, "count":  1, "rate": 0 }
+      ],
+      "inputs": [],
+      "buildings": ["Gathered"]
+    },
+    {
       "name": "Conveyor Pole",
       "time": 1,
       "rate": 60,

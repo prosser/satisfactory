@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29519.87
-MinimumVisualStudioVersion = 16.0.29519.87
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatisfactoryTools", "src\SatisfactoryTools\SatisfactoryTools.csproj", "{3098D2E7-837F-4A63-98B8-27FAE4F5D0CC}"
+VisualStudioVersion = 16.0.29721.120
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatisfactoryTools", "SatisfactoryTools\SatisfactoryTools.csproj", "{3098D2E7-837F-4A63-98B8-27FAE4F5D0CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatisfactoryTools.Library", "src\SatisfactoryTools.Library\SatisfactoryTools.Library.csproj", "{16F2293C-B6AB-4BC7-B367-169A393A97EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatisfactoryTools.Library", "SatisfactoryTools.Library\SatisfactoryTools.Library.csproj", "{16F2293C-B6AB-4BC7-B367-169A393A97EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatisfactoryTools.Test", "test\SatisfactoryTools.Test.csproj", "{93589DBB-6AD6-4E54-ABBB-41D3F91B7E31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatisfactoryTools.Test", "..\test\SatisfactoryTools.Test.csproj", "{93589DBB-6AD6-4E54-ABBB-41D3F91B7E31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

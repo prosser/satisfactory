@@ -33,6 +33,8 @@
         [Description("Oil Refinery")]
         OilRefinery,
 
-        Miner
+        Miner,
+
+        Gathered
     }
 }
