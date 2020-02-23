@@ -20,7 +20,7 @@ namespace SatisfactoryTools.Test
 
         public DataTests()
         {
-            this.json = File.ReadAllText(@"Content\items.json");
+            this.json = File.ReadAllText(Path.Combine("Content", "items.json"));
         }
 
         [Fact]
