@@ -4,10 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
     using Blazored.LocalStorage;
-
-    using SatisfactoryTools.Storage;
+    using Storage;
 
     public class LocalStorageProvider : IStorageProvider
     {
@@ -24,17 +22,15 @@
 
         public event EventHandler<StorageChangingEventArgs> Changing;
 
-        public Task ClearAsync()
+        public event EventHandler Cleared;
+
+        public async Task ClearAsync()
         {
-            return this.localStorage.ClearAsync();
+            await this.localStorage.ClearAsync().ConfigureAwait(false);
+            this.Cleared?.Invoke(this, EventArgs.Empty);
         }
 
         public Task<bool> ContainKeyAsync(string key)
-        {
-            return this.localStorage.ContainKeyAsync(key);
-        }
-
-        public Task<bool> ContainsKeyAsync(string key)
         {
             return this.localStorage.ContainKeyAsync(key);
         }
@@ -54,14 +50,19 @@
             return this.localStorage.LengthAsync();
         }
 
-        public Task RemoveItemAsync(string key)
+        public Task RemoveItemAsync<T>(string key)
         {
             return this.localStorage.RemoveItemAsync(key);
         }
 
-        public Task SetItemAsync(string key, object data)
+        public Task SetItemAsync<T>(string key, T data)
         {
             return this.localStorage.SetItemAsync(key, data);
+        }
+
+        public Task<bool> ContainsKeyAsync(string key)
+        {
+            return this.localStorage.ContainKeyAsync(key);
         }
 
         private void LocalStorage_OnChanged(object sender, ChangedEventArgs e)

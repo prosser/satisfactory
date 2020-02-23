@@ -8,8 +8,7 @@
     using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
-
-    using SatisfactoryTools.Storage;
+    using Storage;
 
     public class TestStorageProvider : IStorageProvider
     {
@@ -19,10 +18,16 @@
 
         public event EventHandler<StorageChangingEventArgs> Changing;
 
+        public event EventHandler Cleared;
+
         public Task ClearAsync()
         {
-            this.values.Clear();
-            return Task.CompletedTask;
+            return this.ChangeAsync<object>(null, null, () =>
+            {
+                this.values.Clear();
+                this.Cleared?.Invoke(this, EventArgs.Empty);
+                return Task.CompletedTask;
+            });
         }
 
         public Task<bool> ContainKeyAsync(string key)
@@ -32,7 +37,14 @@
 
         public async Task<T> GetItemAsync<T>(string key)
         {
-            await using MemoryStream memory = new MemoryStream(Encoding.UTF8.GetBytes(this.values[key]));
+            string value = this.values[key];
+
+            if (string.IsNullOrEmpty(value))
+            {
+                return default;
+            }
+
+            await using var memory = new MemoryStream(Encoding.UTF8.GetBytes(value));
             return await JsonSerializer.DeserializeAsync<T>(memory, SerializerOptions.JsonSerializerOptions);
         }
 
@@ -46,20 +58,50 @@
             return Task.FromResult(this.values.Count);
         }
 
-        public Task RemoveItemAsync(string key)
+        public Task RemoveItemAsync<T>(string key)
         {
-            this.values.Remove(key);
-            return Task.CompletedTask;
+            return this.ChangeAsync<T>(key, default, () =>
+            {
+                this.values.Remove(key);
+                return Task.CompletedTask;
+            });
         }
 
-        public async Task SetItemAsync(string key, object data)
+        public Task SetItemAsync<T>(string key, T data)
         {
-            await using MemoryStream memory = new MemoryStream();
-            await JsonSerializer.SerializeAsync(memory, data).ConfigureAwait(false);
-            memory.Position = 0;
-            using StreamReader reader = new StreamReader(memory);
-            string json = reader.ReadToEnd();
-            this.values.Set(key, json);
+            return this.ChangeAsync(key, data, async () =>
+            {
+                await using var memory = new MemoryStream();
+                await JsonSerializer.SerializeAsync(memory, data).ConfigureAwait(false);
+                memory.Position = 0;
+
+                using var reader = new StreamReader(memory);
+                string json = reader.ReadToEnd();
+                this.values.Set(key, json);
+            });
+        }
+
+        private async Task ChangeAsync<T>(string key, T data, Func<Task> changer)
+        {
+            if (this.Changing != null || this.Changed != null)
+            {
+                T oldValue = key == null ? default : await this.GetItemAsync<T>(key).ConfigureAwait(false);
+
+                var args = new StorageChangingEventArgs {Key = key, OldValue = oldValue, NewValue = data};
+
+                this.Changing?.Invoke(this, args);
+
+                if (!args.Cancel)
+                {
+                    await changer().ConfigureAwait(false);
+
+                    this.Changed?.Invoke(this, args);
+                }
+            }
+            else
+            {
+                await changer().ConfigureAwait(false);
+            }
         }
     }
 }

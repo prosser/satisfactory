@@ -50,7 +50,11 @@
                         Name = name,
                         PartClass = fluidIdSet.Contains(id) ? PartClass.Fluid : PartClass.Item
                     };
-                    this.parts.TryAdd(id, part);
+
+                    if (!this.parts.TryAdd(id, part))
+                    {
+                        throw new InvalidOperationException($"Duplicate part {part.Name} defined in Items data");
+                    }
                 }
 
                 ++id;

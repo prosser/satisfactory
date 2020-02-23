@@ -13,6 +13,8 @@
 
         Task ClearAsync();
 
+        event EventHandler Cleared;
+
         Task<bool> ContainKeyAsync(string key);
 
         Task<T> GetItemAsync<T>(string key);
@@ -21,8 +23,8 @@
 
         Task<int> LengthAsync();
 
-        Task RemoveItemAsync(string key);
+        Task RemoveItemAsync<T>(string key);
 
-        Task SetItemAsync(string key, object data);
+        Task SetItemAsync<T>(string key, T data);
     }
 }

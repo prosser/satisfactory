@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     using SatisfactoryTools.Models.Dto;
     using SatisfactoryTools.Services;
 
+    [DebuggerDisplay("{Part.Name} @{Rate}/min ({Count})")]
     public class PartIo
     {
         public int Count { get; set; }
