@@ -2,71 +2,162 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
-    public class PartNode
+    [DebuggerDisplay("{Recipe.Name} -> {string.Join(\", \", ChildRecipeNames)}")]
+    public class RecipeNode
     {
-        public HashSet<PartNode> Consumers { get; } = new HashSet<PartNode>();
+        public string[] ChildRecipeNames => this.Children.Select(x => x.Recipe.Name).OrderBy(x => x).ToArray();
 
-        public Part Part { get; set; }
+        public HashSet<RecipeNode> Children { get; } = new HashSet<RecipeNode>();
 
-        public HashSet<PartNode> Producers { get; } = new HashSet<PartNode>();
+        public string[] ParentRecipeNames => this.Parents.Select(x => x.Recipe.Name).OrderBy(x => x).ToArray();
 
-        public HashSet<Recipe> Recipes { get; } = new HashSet<Recipe>();
+        public HashSet<RecipeNode> Parents { get; } = new HashSet<RecipeNode>();
 
-        public void AddConsumer(PartNode node)
+        public Recipe Recipe { get; set; }
+
+        public bool TryConnect(RecipeNode node)
         {
-            this.Consumers.Add(node);
-            node.Producers.Add(this);
-        }
-
-        public PartNode Find(Part part)
-        {
-            if (part == this.Part)
+            if (node.Recipe.Outputs.Any(x => this.Recipe.Inputs.Any(a => a.Part == x.Part)))
             {
-                return this;
+                this.Parents.Add(node);
+                node.Children.Add(this);
+                return true;
             }
 
-            return this.Consumers.Select(x => x.Find(part)).FirstOrDefault(x => x != null);
+            if (node.Recipe.Inputs.Any(x => this.Recipe.Outputs.Any(a => a.Part == x.Part)))
+            {
+                this.Children.Add(node);
+                node.Parents.Add(this);
+                return true;
+            }
+
+            return false;
         }
     }
 
-    public class PartTree
+    public class RecipeTree
     {
-        public PartNode Root { get; } = new PartNode { Part = Part.None };
+        public RecipeNode Root { get; } = new RecipeNode {Recipe = Recipe.None};
 
-        public bool TryAdd(Recipe recipe)
+        public static RecipeTree Build(IEnumerable<Recipe> recipes)
         {
-            if (recipe.Inputs.Count == 0)
-            {
-                foreach (PartIo output in recipe.Outputs)
-                {
-                    var node = new PartNode { Part = output.Part };
-                    node.Recipes.Add(recipe);
-                    this.Root.AddConsumer(node);
-                }
+            var allNodes = new HashSet<RecipeNode>(recipes.Select(x => new RecipeNode { Recipe = x }));
 
+            var recipeQueue = new Queue<RecipeNode>(allNodes);
+            var skipped = new List<RecipeNode>();
+            var tree = new RecipeTree();
+
+            while (recipeQueue.Count > 0 && skipped.Count < recipeQueue.Count)
+            {
+                var node = recipeQueue.Dequeue();
+
+                if (tree.TryAdd(node, allNodes))
+                {
+                    skipped.Clear();
+                }
+                else
+                {
+                    skipped.Add(node);
+                    recipeQueue.Enqueue(node);
+                }
+            }
+
+            if (skipped.Count > 0)
+            {
+                throw new InvalidOperationException(
+                    $"There were {skipped.Count} recipes that could not be linked to the tree: {string.Join(", ", skipped.Select(x=> x.Recipe.Name))}");
+            }
+            return tree;
+        }
+
+        public IEnumerable<RecipeNode> FindRecipe(Recipe recipe)
+        {
+            var queue = new Queue<RecipeNode>(new[] {this.Root});
+            var seen = new HashSet<RecipeNode>();
+
+            while (queue.Count > 0)
+            {
+                RecipeNode node = queue.Dequeue();
+
+                if (node.Recipe == recipe)
+                {
+                    yield return node;
+                }
+                else
+                {
+                    foreach (RecipeNode child in node.Children.Where(x => seen.Add(x)))
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<RecipeNode> FindRecipesThatConsume(Part part)
+        {
+            var queue = new Queue<RecipeNode>(new[] {this.Root});
+            var seen = new HashSet<RecipeNode>();
+
+            while (queue.Count > 0)
+            {
+                RecipeNode node = queue.Dequeue();
+
+                if (node.Recipe.Inputs.Any(x => x.Part == part))
+                {
+                    yield return node;
+                }
+                else
+                {
+                    foreach (RecipeNode child in node.Children.Where(x => seen.Add(x)))
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<RecipeNode> FindRecipesThatProduce(Part part)
+        {
+            var queue = new Queue<RecipeNode>(new[] {this.Root});
+            var seen = new HashSet<RecipeNode>();
+
+            while (queue.Count > 0)
+            {
+                RecipeNode node = queue.Dequeue();
+
+                if (node.Recipe.Outputs.Any(x => x.Part == part))
+                {
+                    yield return node;
+                }
+                else
+                {
+                    foreach (RecipeNode child in node.Children.Where(x => seen.Add(x)))
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+            }
+        }
+
+        public bool TryAdd(RecipeNode node, HashSet<RecipeNode> allNodes)
+        {
+            if (node.Recipe.Inputs.Count == 0)
+            {
+                this.Root.Children.Add(node);
                 return true;
             }
 
-            foreach (PartIo input in recipe.Inputs)
+            RecipeNode[] except = new[] {node};
+            bool connected = false;
+            foreach (var other in allNodes.Except(except))
             {
-                Part part = input.Part;
-                PartNode producer = this.Root.Find(part);
-                if (producer == null)
-                {
-                    return false;
-                }
-
-                foreach (PartIo output in recipe.Outputs)
-                {
-                    var node = new PartNode { Part = output.Part };
-                    node.Recipes.Add(recipe);
-                    producer.AddConsumer(node);
-                }
-
-                return true;
+                connected |= other.TryConnect(node);
             }
+
+            return connected;
         }
     }
 }

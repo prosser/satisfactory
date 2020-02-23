@@ -14,7 +14,10 @@
                 Builder.Manufacturer,
                 Builder.WaterExtractor,
                 Builder.OilPump,
-                Builder.Miner
+                Builder.Miner,
+                Builder.OilRefinery,
+                Builder.Foundry,
+                Builder.Smelter
             });
     }
 }

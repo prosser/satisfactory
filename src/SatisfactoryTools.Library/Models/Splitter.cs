@@ -8,16 +8,28 @@
     {
         private PartIo input;
 
-        private PartIo[] outputs;
+        private readonly List<PartIo> outputs = new List<PartIo>();
 
         public int ConnectedOutputs
         {
-            get => this.outputs.Length;
+            get => this.outputs.Count;
             set
             {
-                if (value == this.outputs.Length)
+                if (value == this.outputs.Count)
                 {
+                    return;
                 }
+
+                if (value > this.outputs.Count)
+                {
+                    this.outputs.Add(new PartIo());
+                }
+                else
+                {
+                    this.outputs.RemoveAt(this.outputs.Count - 1);
+                }
+
+                this.ConfigureOutputs();
             }
         }
 
@@ -35,22 +47,23 @@
 
                 this.input = value[0];
 
-                if (this.ConnectedOutputs == 0)
-                {
-                    return;
-                }
+                this.ConfigureOutputs();
+            }
+        }
 
-                double outputRates = this.input.Rate / this.ConnectedOutputs;
+        private void ConfigureOutputs()
+        {
+            if (this.ConnectedOutputs == 0)
+            {
+                return;
+            }
 
-                for (int i = 0; i < this.ConnectedOutputs; i++)
-                {
-                    this.outputs[i].Part = this.input. = new PartIo
-                    {
-                        Part = this.input.Part,
-                        Rate = outputRates,
-                        Count = -1
-                    };
-                }
+            double rate = this.input.Rate / this.ConnectedOutputs;
+
+            for (int i = 0; i < this.ConnectedOutputs; i++)
+            {
+                this.outputs[i].Part = this.input.Part;
+                this.outputs[i].Rate = rate;
             }
         }
 

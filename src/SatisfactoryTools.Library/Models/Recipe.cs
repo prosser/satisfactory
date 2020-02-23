@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     using SatisfactoryTools.Models.Dto;
     using SatisfactoryTools.Services;
 
+    [DebuggerDisplay("{Id} {Name} - {Building}")]
     public class Recipe : NodeTransformer
     {
         public Recipe()
@@ -18,14 +20,22 @@
             this.Id = id;
             this.Name = dto.Name;
             this.Time = TimeSpan.FromSeconds(dto.Time);
-            this.Inputs = dto.Inputs.Select(x => PartIo.Hydrate(x, partStore)).ToArray();
+            this.Inputs = dto.Inputs.Where(x => x.Id != id).Select(x => PartIo.Hydrate(x, partStore)).ToArray();
             this.Outputs = dto.Outputs.Select(x => PartIo.Hydrate(x, partStore)).ToArray();
             this.Builders = dto.Buildings.Select(x => x.Trim().ParseFromDescription<Builder>()).ToHashSet();
             this.IsUnlockable = true;
-            this.Building = this.Builders.SingleOrDefault(x => StaticCollections.Buildings.Contains(x));
+
+            foreach (var builder in this.Builders)
+            {
+                if (StaticCollections.Buildings.Contains(builder))
+                {
+                    this.Building = builder;
+                    break;
+                }
+            }
 
             // HACK mined items have as their inputs the name of the output!
-            this.IsUnlockable = this.Outputs.Any(x => x.Part.Name == this.Name);
+            this.IsUnlockable = this.Outputs.All(x => x.Part.Name != this.Name);
         }
 
         public static Recipe None { get; } = new Recipe { Name = "None" };
