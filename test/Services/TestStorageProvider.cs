@@ -12,6 +12,7 @@
 
     public class TestStorageProvider : IStorageProvider
     {
+        private readonly JsonSerializerOptions serializerOptions;
         private readonly NameValueCollection values = new NameValueCollection();
 
         public event EventHandler<StorageChangedEventArgs> Changed;
@@ -19,6 +20,11 @@
         public event EventHandler<StorageChangingEventArgs> Changing;
 
         public event EventHandler Cleared;
+
+        public TestStorageProvider(JsonSerializerOptions serializerOptions)
+        {
+            this.serializerOptions = serializerOptions;
+        }
 
         public Task ClearAsync()
         {
@@ -45,7 +51,7 @@
             }
 
             await using var memory = new MemoryStream(Encoding.UTF8.GetBytes(value));
-            return await JsonSerializer.DeserializeAsync<T>(memory, SerializerOptions.JsonSerializerOptions);
+            return await JsonSerializer.DeserializeAsync<T>(memory, this.serializerOptions);
         }
 
         public Task<string> KeyAsync(int index)

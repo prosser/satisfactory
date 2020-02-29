@@ -13,7 +13,7 @@
                 Builder.BuildTool => false,
                 Builder.Workbench => false,
                 Builder.Workshop => false,
-                _ => true
+                var _ => true
             };
         }
     }

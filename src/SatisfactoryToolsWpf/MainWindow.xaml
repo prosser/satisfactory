@@ -1,0 +1,71 @@
+﻿<Window x:Class="SatisfactoryTools.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SatisfactoryTools.Wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <DockPanel>
+        <Grid DockPanel.Dock="Left">
+            <StackPanel>
+                <Label>Nodes</Label>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel>
+                        <Label>Copper</Label>
+                        <TextBox Name="RateCopper" DataContext="" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Label>Iron</Label>
+                        <TextBox />
+                        <ComboBox Name="IronPurityComboBox" SelectedIndex="1">
+                            <ComboBoxItem Content="Impure" />
+                            <ComboBoxItem Content="Normal" />
+                            <ComboBoxItem Content="Pure" />
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <Label>Limestone</Label>
+                        <ComboBox Name="LimestonePurityComboBox" SelectedIndex="1">
+                            <ComboBoxItem Content="Impure" />
+                            <ComboBoxItem Content="Normal" />
+                            <ComboBoxItem Content="Pure" />
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel>
+                        <Label>Coal</Label>
+                        <ComboBox Name="CoalPurityComboBox" SelectedIndex="1">
+                            <ComboBoxItem Content="Impure" />
+                            <ComboBoxItem Content="Normal" />
+                            <ComboBoxItem Content="Pure" />
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <Label>Sulfer</Label>
+                        <ComboBox Name="SulferPurityComboBox" SelectedIndex="1">
+                            <ComboBoxItem Content="Impure" />
+                            <ComboBoxItem Content="Normal" />
+                            <ComboBoxItem Content="Pure" />
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <Label>Quartz</Label>
+                        <ComboBox Name="QuartzPurityComboBox" SelectedIndex="1">
+                            <ComboBoxItem Content="Impure" />
+                            <ComboBoxItem Content="Normal" />
+                            <ComboBoxItem Content="Pure" />
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+                <Label>Miner</Label>
+                <ComboBox Name="MinerComboBox" SelectedIndex="0">
+                    <ComboBoxItem Content="Mk1" />
+                    <ComboBoxItem Content="Mk2" />
+                    <ComboBoxItem Content="Mk3" />
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>

@@ -9,7 +9,7 @@
     using Services;
 
     [DebuggerDisplay("{Id} {Description}")]
-    public class Recipe : NodeTransformer
+    public class Recipe : NodeTransformer, IIdentifiable, INamed
     {
         public Recipe()
         {
@@ -45,8 +45,6 @@
 
         public bool HandBuilt => this.Building == null;
 
-        public int Id { get; }
-
         public bool IsMined => this.Building switch
         {
             Builder.Miner => true,
@@ -59,13 +57,15 @@
 
         public bool IsValid => this.Outputs.Count > 0;
 
-        public string Name { get; set; }
-
-        public static Recipe None { get; } = new Recipe {Name = "None"};
+        public static Recipe None { get; } = new Recipe { Name = "None" };
 
         public bool RequiresBuilding => this.Builders.All(x => x.IsBuilding());
 
         public TimeSpan Time { get; } = TimeSpan.Zero;
+
+        public int Id { get; }
+
+        public string Name { get; set; }
 
         internal override NodeTransformer Clone(CloneFilters filters)
         {

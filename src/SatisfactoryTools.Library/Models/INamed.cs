@@ -1,10 +1,11 @@
-﻿namespace SatisfactoryTools.Storage
+﻿namespace SatisfactoryTools.Models
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    internal class StorageProviderBase
+    public interface INamed
     {
+        string Name { get; }
     }
 }

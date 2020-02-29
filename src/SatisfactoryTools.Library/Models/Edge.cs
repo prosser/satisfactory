@@ -20,7 +20,7 @@
 
         public Edge Clone(CloneFilters filters)
         {
-            Edge clone = new Edge
+            var clone = new Edge
             {
                 Capacity = this.Capacity,
                 Rate = this.Rate,

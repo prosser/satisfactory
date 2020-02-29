@@ -11,8 +11,8 @@
         public Merger()
         {
             this.inputs = new PartIo[3];
-            this.Output = new PartIo {Part = Part.None, Count = 0, Rate = 0};
-            this.SetOutputs(new[] {this.Output});
+            this.Output = new PartIo { Part = Part.None, Count = 0, Rate = 0 };
+            this.SetOutputs(new[] { this.Output });
             this.SetInputs(this.inputs);
         }
 

@@ -7,15 +7,14 @@ namespace SatisfactoryTools
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using Microsoft.Extensions.DependencyInjection;
-
-    using SatisfactoryTools.Services;
+    using Services;
 
     public static class Startup
     {
         public static void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(SerializerOptionsFactory.CreateSerializerOptions());
             services.AddSingleton<IObjectLookupService, ObjectLookupService>();
             services.AddSingleton<IPartStore, PartStore>();
             //services.AddScoped<IProductionLineFactory, ProductionLineFactory>();

@@ -10,7 +10,7 @@
 
         public Splitter()
         {
-            this.Input = new PartIo {Part = Part.None, Count = 0, Rate = 0};
+            this.Input = new PartIo { Part = Part.None, Count = 0, Rate = 0 };
             this.outputs = new[]
             {
                 PartIo.CreateNone(),
@@ -18,7 +18,7 @@
                 PartIo.CreateNone()
             };
 
-            this.SetInputs(new[] {this.Input});
+            this.SetInputs(new[] { this.Input });
             this.SetOutputs(this.outputs);
         }
 
@@ -34,7 +34,7 @@
 
             for (int i = 0; i < connections.Length; i++)
             {
-                this.outputs[i] = connections[i] ? new PartIo {Part = input.Part} : PartIo.CreateNone();
+                this.outputs[i] = connections[i] ? new PartIo { Part = input.Part } : PartIo.CreateNone();
             }
 
             this.ConfigureOutputs();
@@ -47,7 +47,7 @@
             get => this.Inputs.Count == 0 ? null : this.Inputs[0];
             set
             {
-                this.SetInputs(value == null ? Array.Empty<PartIo>() : new[] {value});
+                this.SetInputs(value == null ? Array.Empty<PartIo>() : new[] { value });
                 this.ConfigureOutputs();
             }
         }

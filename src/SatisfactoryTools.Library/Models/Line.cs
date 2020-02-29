@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace SatisfactoryTools.Models
+﻿namespace SatisfactoryTools.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class Line
     {
         public Node Head { get; set; }
@@ -16,7 +18,11 @@ namespace SatisfactoryTools.Models
             };
 
             clone.Nodes.Add(clone.Head);
-            foreach (Node node in clone.Head) clone.Nodes.Add(node);
+
+            foreach (Node node in clone.Head)
+            {
+                clone.Nodes.Add(node);
+            }
 
             return clone;
         }

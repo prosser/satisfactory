@@ -5,15 +5,12 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-
-    using SatisfactoryTools.Models;
-    using SatisfactoryTools.Models.Dto;
+    using Models;
+    using Models.Dto;
 
     public class PartStore : IPartStore
     {
         private readonly ConcurrentDictionary<int, Part> parts = new ConcurrentDictionary<int, Part>();
-
-        public int Count => this.parts.Count;
 
         public Part this[int key]
         {
@@ -21,10 +18,7 @@
             set => this.parts[key] = value;
         }
 
-        public bool Contains(int key)
-        {
-            return this.parts.ContainsKey(key);
-        }
+        public int Count => this.parts.Count;
 
         public Part Get(int id)
         {
@@ -40,11 +34,12 @@
         {
             int id = 0;
             var fluidIdSet = new HashSet<int>(data.Fluids);
+
             foreach (string name in data.Parts)
             {
                 if (name != "None")
                 {
-                    Part part = new Part
+                    var part = new Part
                     {
                         Id = id,
                         Name = name,
@@ -64,6 +59,11 @@
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        public bool Contains(int key)
+        {
+            return this.parts.ContainsKey(key);
         }
     }
 }

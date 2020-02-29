@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatisfactoryTools.Library",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatisfactoryTools.Test", "test\SatisfactoryTools.Test.csproj", "{93589DBB-6AD6-4E54-ABBB-41D3F91B7E31}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatisfactoryToolsWpf", "src\SatisfactoryToolsWpf\SatisfactoryToolsWpf.csproj", "{3D4AC5ED-FCDB-4F0B-A8DC-0DF968BA107B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{93589DBB-6AD6-4E54-ABBB-41D3F91B7E31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93589DBB-6AD6-4E54-ABBB-41D3F91B7E31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93589DBB-6AD6-4E54-ABBB-41D3F91B7E31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D4AC5ED-FCDB-4F0B-A8DC-0DF968BA107B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D4AC5ED-FCDB-4F0B-A8DC-0DF968BA107B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D4AC5ED-FCDB-4F0B-A8DC-0DF968BA107B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D4AC5ED-FCDB-4F0B-A8DC-0DF968BA107B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

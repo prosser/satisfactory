@@ -32,7 +32,7 @@ namespace SatisfactoryTools.Test
             var recipeStoreMock = new Mock<IRecipeStore>();
             recipeStoreMock.Setup(x => x.Load(It.IsAny<ItemsDto>()));
 
-            TestDataLoader loader = new TestDataLoader(this.json, partStoreMock.Object, recipeStoreMock.Object);
+            TestDataLoader loader = new TestDataLoader(this.json, partStoreMock.Object, recipeStoreMock.Object, SerializerOptionsFactory.CreateSerializerOptions());
             await loader.LoadDataAsync().ConfigureAwait(false);
 
             partStoreMock.Verify(x => x.Load(It.IsAny<ItemsDto>()));
@@ -49,7 +49,7 @@ namespace SatisfactoryTools.Test
 
             IPartStore partStore = new PartStore();
 
-            TestDataLoader loader = new TestDataLoader(this.json, partStore, recipeStoreMock.Object);
+            TestDataLoader loader = new TestDataLoader(this.json, partStore, recipeStoreMock.Object, SerializerOptionsFactory.CreateSerializerOptions());
             await loader.LoadDataAsync().ConfigureAwait(false);
 
             Assert.NotEmpty(partStore);
@@ -62,7 +62,7 @@ namespace SatisfactoryTools.Test
             IPartStore partStore = new PartStore();
             IRecipeStore recipeStore = new RecipeStore(partStore, objectLookupMock);
 
-            TestDataLoader loader = new TestDataLoader(this.json, partStore, recipeStore);
+            TestDataLoader loader = new TestDataLoader(this.json, partStore, recipeStore, SerializerOptionsFactory.CreateSerializerOptions());
             await loader.LoadDataAsync().ConfigureAwait(false);
 
             Assert.NotEmpty(recipeStore);

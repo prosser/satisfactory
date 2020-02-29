@@ -16,17 +16,19 @@
         private readonly IPartStore partStore;
 
         private readonly IRecipeStore recipeStore;
+        private readonly JsonSerializerOptions serializerOptions;
 
-        public TestDataLoader(string json, IPartStore partStore, IRecipeStore recipeStore)
+        public TestDataLoader(string json, IPartStore partStore, IRecipeStore recipeStore, JsonSerializerOptions serializerOptions)
         {
             this.json = json;
             this.partStore = partStore;
             this.recipeStore = recipeStore;
+            this.serializerOptions = serializerOptions;
         }
 
         public Task LoadDataAsync()
         {
-            ItemsDto data = JsonSerializer.Deserialize<ItemsDto>(this.json, SerializerOptions.JsonSerializerOptions);
+            ItemsDto data = JsonSerializer.Deserialize<ItemsDto>(this.json, this.serializerOptions);
 
             this.partStore.Load(data);
             this.recipeStore.Load(data);

@@ -40,7 +40,7 @@
 
     public class RecipeTree
     {
-        public RecipeNode Root { get; } = new RecipeNode {Recipe = Recipe.None};
+        public RecipeNode Root { get; } = new RecipeNode { Recipe = Recipe.None };
 
         public static RecipeTree Build(IEnumerable<Recipe> recipes)
         {
@@ -52,7 +52,7 @@
 
             while (recipeQueue.Count > 0 && skipped.Count < recipeQueue.Count)
             {
-                var node = recipeQueue.Dequeue();
+                RecipeNode node = recipeQueue.Dequeue();
 
                 if (tree.TryAdd(node, allNodes))
                 {
@@ -68,14 +68,15 @@
             if (skipped.Count > 0)
             {
                 throw new InvalidOperationException(
-                    $"There were {skipped.Count} recipes that could not be linked to the tree: {string.Join(", ", skipped.Select(x=> x.Recipe.Name))}");
+                    $"There were {skipped.Count} recipes that could not be linked to the tree: {string.Join(", ", skipped.Select(x => x.Recipe.Name))}");
             }
+
             return tree;
         }
 
         public IEnumerable<RecipeNode> FindRecipe(Recipe recipe)
         {
-            var queue = new Queue<RecipeNode>(new[] {this.Root});
+            var queue = new Queue<RecipeNode>(new[] { this.Root });
             var seen = new HashSet<RecipeNode>();
 
             while (queue.Count > 0)
@@ -98,7 +99,7 @@
 
         public IEnumerable<RecipeNode> FindRecipesThatConsume(Part part)
         {
-            var queue = new Queue<RecipeNode>(new[] {this.Root});
+            var queue = new Queue<RecipeNode>(new[] { this.Root });
             var seen = new HashSet<RecipeNode>();
 
             while (queue.Count > 0)
@@ -121,7 +122,7 @@
 
         public IEnumerable<RecipeNode> FindRecipesThatProduce(Part part)
         {
-            var queue = new Queue<RecipeNode>(new[] {this.Root});
+            var queue = new Queue<RecipeNode>(new[] { this.Root });
             var seen = new HashSet<RecipeNode>();
 
             while (queue.Count > 0)
@@ -150,9 +151,10 @@
                 return true;
             }
 
-            RecipeNode[] except = new[] {node};
+            RecipeNode[] except = { node };
             bool connected = false;
-            foreach (var other in allNodes.Except(except))
+
+            foreach (RecipeNode other in allNodes.Except(except))
             {
                 connected |= other.TryConnect(node);
             }

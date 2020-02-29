@@ -17,6 +17,7 @@
             }
 
             Type type = typeof(T);
+
             if (!type.IsEnum)
             {
                 throw new InvalidOperationException();
@@ -43,6 +44,7 @@
             }
 
             throw new ArgumentException($"{description} not found in {typeof(T).Name}.", nameof(description));
+
             // or return default(T);
         }
     }

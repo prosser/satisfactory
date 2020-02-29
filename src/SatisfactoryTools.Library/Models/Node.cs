@@ -13,9 +13,27 @@
 
         public NodeTransformer Transformer { get; set; }
 
+        public IEnumerator<Node> GetEnumerator()
+        {
+            foreach (Edge edge in this.Inputs)
+            {
+                yield return edge.Producer;
+
+                foreach (Node node in edge.Producer)
+                {
+                    yield return node;
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
         public Node Clone(CloneFilters filters)
         {
-            Node clone = new Node
+            var clone = new Node
             {
                 Transformer = this.Transformer.Clone(filters)
             };
@@ -44,23 +62,6 @@
             return this.Inputs.Count == 0
                 ? this.Outputs.Sum(x => x.Rate)
                 : this.Inputs.Sum(x => x.Consumer.GetCombinedLeafRate());
-        }
-
-        public IEnumerator<Node> GetEnumerator()
-        {
-            foreach (Edge edge in this.Inputs)
-            {
-                yield return edge.Producer;
-                foreach (Node node in edge.Producer)
-                {
-                    yield return node;
-                }
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
         }
     }
 }

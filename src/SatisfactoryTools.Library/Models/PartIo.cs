@@ -31,7 +31,7 @@
 
         public static PartIo CreateNone()
         {
-            return new PartIo {Part = Part.None, Count = 0, Rate = 0};
+            return new PartIo { Part = Part.None, Count = 0, Rate = 0 };
         }
 
         public static PartIo Hydrate(PartIoDto dto, IPartStore store)
